@@ -1,6 +1,13 @@
 USE ASUZD
 select  pr.Id
-     , anu.FirstName + ' ' + anu.MiddleName + ' ' + anu.LastName
+        ,anu.FirstName + ' ' + anu.MiddleName + ' ' + anu.LastName
+        ,'ToDo Дата получения ТЗ для проведения процедуры торгов'
+        ,pr.Status
+        ,pr.Name
+        ,pr.PlannedPurchaseMethodCode
+        ,tp.Id
+        ,pr.CustomerOrganizer
+        ,tp.ExpEnvelopeOpeningTime
      ,  exp.Id
      , et.Description
      , ai.Time
@@ -21,4 +28,5 @@ left join PurchaseRequests PR on AC.RequestId = PR.Id
 left join TechnicalProjectRequests TPR on AC.Id = TPR.AuctionCycleId
 left join TechnicalProjects TP on TPR.TechnicalProjectId = TP.Id
 left join AspNetUsers ANU on TP.ExecutorId = ANU.Id
+
 where pr.Id = 20509
