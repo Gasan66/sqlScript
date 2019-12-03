@@ -1,3 +1,4 @@
+use ASUZD
 select RequestParticipiants.*
 from RequestParticipiants
 left join AuctionStages [AS] on RequestParticipiants.AuctionStageId = [AS].Id
