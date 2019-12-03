@@ -49,41 +49,56 @@ full outer join ExpertisesPriceOffer epo on efp.AuctionStage_Id = epo.AuctionSta
 order by 4
 
 
-select pr.Id
-     ,ac.Id
-     ,[as].Id
-     ,anu.LastName
+select pr.Id as 'номер лота'
+     ,ac.Id as 'номер цикла'
+--      ,exp.Type
+     ,[as].Id as 'номер стадии'
+     ,anu.LastName as 'фамилия закупщика'
      ,N'ToDo Дата получения ТЗ для проведения процедуры торгов'
-     ,ac.Status
-     ,pr.Name
-     ,pr.PlannedPurchaseMethodCode
-     ,tp.Id
-     ,pr.CustomerOrganizer
-     ,tp.ExpEnvelopeOpeningTime
-       ,exp.Id
-        ,case
+     ,stat.Description as 'статус лота'
+     ,pr.Name as 'предмет закупки'
+     ,pr.PlannedPurchaseMethodCode as 'метод закупки'
+     ,tp.Id as 'номер ТЗ'
+     ,pr.CustomerOrganizer as 'организация'
+     ,tp.ExpEnvelopeOpeningTime as 'дата вскрытия'
+--        ,exp.Id
+        ,max(case
             when exp.Type = 'FirstPart' then exp.TimeAdd
-         end
-        ,case
+         end) as 'начало первых частей'
+        ,max(case
             when exp.Type = 'FirstPart' then exp.TimeFinish
-         end
-        ,case
+         end) as 'конец первых частей'
+        ,max(case
             when exp.Type = 'SecondPart' then exp.TimeAdd
-         end
-        ,case
+         end) as 'начало вторых частей'
+        ,max(case
             when exp.Type = 'SecondPart' then exp.TimeFinish
-         end
-        ,case
+         end) as 'конец вторых частей'
+        ,max(case
             when exp.Type = 'PriceOffer' then exp.TimeAdd
-         end
-        ,case
+         end) as 'начало ценового предложения'
+        ,max(case
             when exp.Type = 'PriceOffer' then exp.TimeFinish
-         end
+         end) as 'конец ценового предложения'
 from Expertises exp
 join AuctionStages [AS] on exp.AuctionStage_Id = [AS].Id
 join AuctionCycles AC on [AS].AuctionCycleId = AC.Id
 join PurchaseRequests PR on AC.RequestId = PR.Id
+join Status stat on stat.Id = pr.Status
 join TechnicalProjectRequests TPR on AC.Id = TPR.AuctionCycleId
 join TechnicalProjects TP on TPR.TechnicalProjectId = TP.Id
 join AspNetUsers ANU on TP.ExecutorId = ANU.Id
-where exp.Type in ('FirstPart', 'SecondPart', 'PriceOffer')
+where exp.Type in ('FirstPart', 'SecondPart', 'PriceOffer') and exp.AssignedGroupId <> 'abeff4d0-1b43-46b8-a09e-c09fc61d0854'
+and exp.Status = 'Accepted' and exp.AssignedGroupId != '248bed81-4007-4348-a87e-8cee7394861e'
+group by pr.Id, ac.Id, [as].Id, ANU.LastName, stat.Description, pr.Name, pr.PlannedPurchaseMethodCode, tp.Id, pr.CustomerOrganizer, tp.ExpEnvelopeOpeningTime
+-- and pr.Id = 16802
+
+select pr.Id, ac.Id, exp.Type, Count(*)
+from Expertises exp
+join AuctionStages [AS] on exp.AuctionStage_Id = [AS].Id
+join AuctionCycles AC on [AS].AuctionCycleId = AC.Id
+join PurchaseRequests PR on AC.RequestId = PR.Id
+where exp.Type in ('FirstPart', 'SecondPart', 'PriceOffer') and exp.AssignedGroupId != 'abeff4d0-1b43-46b8-a09e-c09fc61d0854'
+and exp.Status = 'Accepted' and exp.AssignedGroupId != '248bed81-4007-4348-a87e-8cee7394861e'
+group by pr.Id, ac.Id, exp.Type having count(*) > 1
+

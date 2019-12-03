@@ -1,24 +1,17 @@
 use ASUZD
-select id, Status, Stage
-from PurchaseRequests
-where id in (18518, 18597, 18627, 20634)
-
 select *
-from PurchaseMethods
-where Code in (N'КэфМСП', N'ЗПэфМСП')
+from RequestFiles
+join FileDatas FD on RequestFiles.Data_Id = FD.Id
+where RequestId = 22601
 
-begin tran updatePurchaseMethods
+begin tran addFile
+    update FileDatas
+    set Name = N'old_Аналитическая записка 20368_ЗПэфМСП _12719_3.pdf'
+    where Id = '66083F7A-E914-EA11-93F6-005056BD0BDE'
 
-    update PurchaseRequests
-    set PlannedPurchaseMethodCode = N'КэфМСП'
-    where id = 14407
 
-    update PurchaseRequests
-    set PlannedPurchaseMethodCode = N'ЗПэфМСП'
-    where id = 15756
-
-    select id, PlannedPurchaseMethodCode, OwnerOrganizationId
-    from PurchaseRequests
-    where id in (14407, 15756)
-
+    select *
+    from RequestFiles
+    join FileDatas FD on RequestFiles.Data_Id = FD.Id
+    where RequestId = 22289
 rollback tran
