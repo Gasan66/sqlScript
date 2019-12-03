@@ -1,6 +1,6 @@
 use ASUZD
-SELECT
-	[RequestId],[Name],[PurchaseNumber],[LotNumber],[CustomerSubdivisionName],[PriceTzNoTax],[PriceTzTax],[ExpCountParticipiantsApplied],[TradeCounter]
+SELECT *
+-- 	[RequestId],[Name],[PurchaseNumber],[LotNumber],[CustomerSubdivisionName],[PriceTzNoTax],[PriceTzTax],[ExpCountParticipiantsApplied],[TradeCounter]
 FROM (
 SELECT
 	ROW_NUMBER() OVER (PARTITION BY PPRR.[RequestId] ORDER BY PPRR.[AuctionCycleId] DESC) AS [PurchaseRowIndexNumber]
@@ -14,7 +14,6 @@ SELECT
 	,PPRR.[PriceTzTax]
 	,PPRR.[ExpCountParticipiantsApplied]
 	,COUNT(*) OVER (PARTITION BY PPRR.[RequestId]) AS [TradeCounter]
-    ,pprr.*
 FROM [ASUZD].[vc].[PurchasePlanRealizationReport] AS PPRR
 INNER JOIN (
 SELECT DISTINCT [RequestId] FROM [ASUZD].[vc].[PurchasePlanRealizationReport]
@@ -34,7 +33,7 @@ with PPRR as
     (
     SELECT
 	 ROW_NUMBER() OVER (PARTITION BY [RequestId] ORDER BY [AuctionCycleId] DESC) AS [PurchaseRowIndexNumber]
-	,[RequestId]
+	,PurchasePlanRealizationReport.[RequestId]
 	,[AuctionCycleId]
 	,[Name]
 	,[PurchaseNumber]
@@ -49,15 +48,31 @@ with PPRR as
 
      UnsucessfullTrade as
          (
-    SELECT DISTINCT [RequestId]
-    FROM [ASUZD].[vc].[PurchasePlanRealizationReport]
+    SELECT DISTINCT [RequestId] as req1
+    FROM [ASUZD].[vc].[PurchasePlanRealizationReport] pprr1
     WHERE [PurchaseRowIndexNumber] = 1
         AND [PurchasePlanYear] = 2019 --@PurchasePlanYear
         AND [Description] LIKE N'%Торги не состоялись%'
          )
 
-select *
-from PPRR
-join UnsucessfullTrade on UnsucessfullTrade.RequestId = pprr.RequestId
-where pprr.PurchaseRowIndexNumber = 1
-    and PriceTzNoTax is not null
+SELECT *
+--[RequestId],[Name],[PurchaseNumber],[LotNumber],[CustomerSubdivisionName],[PriceTzNoTax],[PriceTzTax],[ExpCountParticipiantsApplied],[TradeCounter]
+FROM (
+         select * --pprr.PurchaseRowIndexNumber
+--          PPRR.[PurchaseRowIndexNumber]
+-- 	    ,PPRR.[RequestId]
+-- 	    ,PPRR.[AuctionCycleId]
+-- 	    ,PPRR.[Name]
+-- 	    ,PPRR.[PurchaseNumber]
+-- 	    ,PPRR.[LotNumber]
+-- 	    ,PPRR.[CustomerSubdivisionName]
+-- 	    ,PPRR.[PriceTzNoTax]
+-- 	    ,PPRR.[PriceTzTax]
+-- 	    ,PPRR.[ExpCountParticipiantsApplied]
+-- 	    ,PPRR.[TradeCounter]
+         from PPRR
+                  join UnsucessfullTrade on UnsucessfullTrade.req1 = pprr.RequestId
+         where pprr.PurchaseRowIndexNumber = 1
+           and PriceTzNoTax is not null
+     ) AS PivottedUnsuccessTrades
+WHERE PivottedUnsuccessTrades.PurchaseRowIndexNumber = 1
