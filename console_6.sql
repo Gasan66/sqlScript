@@ -76,3 +76,41 @@ FROM (
            and PriceTzNoTax is not null
      ) AS PivottedUnsuccessTrades
 WHERE PivottedUnsuccessTrades.PurchaseRowIndexNumber = 1
+
+
+
+with PPRR as
+    (
+    SELECT
+	 ROW_NUMBER() OVER (PARTITION BY [RequestId] ORDER BY [AuctionCycleId] DESC) AS [PurchaseRowIndexNumber]
+	,PurchasePlanRealizationReport.[RequestId]
+	,[AuctionCycleId]
+	,[Name]
+	,[PurchaseNumber]
+	,[LotNumber]
+	,[CustomerSubdivisionName]
+	,[PriceTzNoTax]
+	,[PriceTzTax]
+	,[ExpCountParticipiantsApplied]
+	,COUNT(*) OVER (PARTITION BY [RequestId]) AS [TradeCounter]
+    FROM [ASUZD].[vc].[PurchasePlanRealizationReport]
+        ),
+
+     UnsucessfullTrade as
+         (
+    SELECT DISTINCT [RequestId] as req1
+    FROM [ASUZD].[vc].[PurchasePlanRealizationReport] pprr1
+    WHERE [PurchaseRowIndexNumber] = 1
+        AND [PurchasePlanYear] = 2019 --@PurchasePlanYear
+        AND [Description] LIKE N'%Торги не состоялись%'
+         )
+
+SELECT *
+FROM (
+         select *
+         from PPRR
+                  join UnsucessfullTrade on UnsucessfullTrade.req1 = pprr.RequestId
+         where pprr.PurchaseRowIndexNumber = 1
+           and PriceTzNoTax is not null
+     ) AS PivottedUnsuccessTrades
+WHERE PivottedUnsuccessTrades.PurchaseRowIndexNumber = 1
