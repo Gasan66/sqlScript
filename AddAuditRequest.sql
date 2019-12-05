@@ -1,9 +1,10 @@
+use ASUZD
 begin tran createAuditItem
 
-declare @requestId bigint = 19934
-declare @date nvarchar(50) = '2019-11-21 22:10:14.143'
+declare @requestId bigint = 18479
+declare @date nvarchar(50) = '2019-12-04 11:10:14.143'
 declare @userId nvarchar(50) = '865341a5-ee62-4814-8b29-8ca8d7bc5884'
-declare @message nvarchar(max) = N'Добавил файл итогового протокола "Итоговый протокол ЗКэфМСП 12729" по запросу от Меньшикова Анна Григорьевна Menshikova-AG@rosseti-ural.ru'
+declare @message nvarchar(max) = N'Изменил значение PaymentSummWithTax на 478770136.78 для имключения ошибки "Согласование не запущено. Сумма долгосрочных оплат не совпадает с указанной ценой лота по извещению/уведомлению." по заявке Инцидент "(Наряд) IT-219749" ссылка https://10.81.35.30/sd/operator/#uuid:serviceCall$57201090'
 
 insert into AuditItems
 values (@date,
