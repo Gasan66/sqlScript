@@ -1,9 +1,9 @@
 begin tran createAuditItem
 
-declare @requestId bigint = 19934
-declare @date nvarchar(50) = '2019-11-21 22:10:14.143'
+declare @requestId bigint = 20290
+declare @date nvarchar(50) = '2019-12-05 22:10:14.143'
 declare @userId nvarchar(50) = '865341a5-ee62-4814-8b29-8ca8d7bc5884'
-declare @message nvarchar(max) = N'Добавил файл итогового протокола "Итоговый протокол ЗКэфМСП 12729" по запросу от Меньшикова Анна Григорьевна Menshikova-AG@rosseti-ural.ru'
+declare @message nvarchar(max) = N'Отменил согласование Дьячук Марины Геннадьевны по письму от Дьячук Марина Геннадьевна Tyukhtina-MG@rosseti-ural.ru'
 
 insert into AuditItems
 values (@date,
@@ -25,6 +25,6 @@ where PurchaseRequestId = @requestId and ItemId in (select id
                                                                                     where Time = @date and UserId = @userId)
 
 
-rollback tran
+-- rollback tran
 
--- commit tran
+commit tran
