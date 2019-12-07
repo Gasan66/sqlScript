@@ -1,8 +1,20 @@
-select usr.FirstName + ' ' + usr.MiddleName + ' ' + usr.LastName as FIO
-        , anr.Name as Depart
-        , Husr.FirstName + ' ' + Husr.MiddleName + ' ' + Husr.LastName as Head
-from AspNetUsers usr
-left join AspNetUserRoles ANUR on usr.Id = ANUR.UserId
-left join AspNetRoles ANR on ANUR.RoleId = ANR.Id
-left join AspNetUsers Husr on Husr.Id = anr.HeadId
-where ANR.GroupRole = 'Customer'
+use ASUZD
+select *
+from LongTermPurschasePayments
+join AuctionCycles AC on LongTermPurschasePayments.AuctionCycleId = AC.Id
+join PurchaseRequests PR on AC.RequestId = PR.Id
+where pr.Id = 18479
+
+begin tran updPaymentSummWithTax
+
+update LongTermPurschasePayments
+set PaymentSummWithTax = 562277743.51 - 83507606.73
+where Id = 14558
+
+select PaymentSummWithTax, 83507606.73 + 478770136.78
+from LongTermPurschasePayments
+join AuctionCycles AC on LongTermPurschasePayments.AuctionCycleId = AC.Id
+join PurchaseRequests PR on AC.RequestId = PR.Id
+where pr.Id = 18479
+
+rollback tran
