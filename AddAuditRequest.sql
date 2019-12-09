@@ -1,10 +1,10 @@
 use ASUZD
 begin tran createAuditItem
 
-declare @requestId bigint = 20290
-declare @date nvarchar(50) = '2019-12-05 22:10:14.143'
+declare @requestId bigint = 19114
+declare @date nvarchar(50) = '2019-12-09 22:10:14.143'
 declare @userId nvarchar(50) = '865341a5-ee62-4814-8b29-8ca8d7bc5884'
-declare @message nvarchar(max) = N'Отменил согласование Дьячук Марины Геннадьевны по письму от Дьячук Марина Геннадьевна Tyukhtina-MG@rosseti-ural.ru'
+declare @message nvarchar(max) = N'Изменил статус на "Торги не состоялись п. 7.5.7. (7.5.8. по стандарту 2018 г.)" по письму от Дьячук Марина Геннадьевна Tyukhtina-MG@rosseti-ural.ru'
 
 insert into AuditItems
 values (@date,
@@ -26,6 +26,6 @@ where PurchaseRequestId = @requestId and ItemId in (select id
                                                                                     where Time = @date and UserId = @userId)
 
 
--- rollback tran
+rollback tran
 
-commit tran
+-- commit tran
