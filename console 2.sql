@@ -1,20 +1,37 @@
-use ASUZD
-select *
-from LongTermPurschasePayments
-join AuctionCycles AC on LongTermPurschasePayments.AuctionCycleId = AC.Id
-join PurchaseRequests PR on AC.RequestId = PR.Id
-where pr.Id = 18479
-
-begin tran updPaymentSummWithTax
-
-update LongTermPurschasePayments
-set PaymentSummWithTax = 562277743.51 - 83507606.73
-where Id = 14558
-
-select PaymentSummWithTax, 83507606.73 + 478770136.78
-from LongTermPurschasePayments
-join AuctionCycles AC on LongTermPurschasePayments.AuctionCycleId = AC.Id
-join PurchaseRequests PR on AC.RequestId = PR.Id
-where pr.Id = 18479
-
-rollback tran
+SELECT
+  vc.PurchasePlan_EETP_toEIS.PRid
+  ,vc.PurchasePlan_EETP_toEIS.PurchasePlanId
+  ,vc.PurchasePlan_EETP_toEIS.PCid
+  ,vc.PurchasePlan_EETP_toEIS.[1_EISnumber]
+  ,vc.PurchasePlan_EETP_toEIS.[2_OKVED2]
+  ,vc.PurchasePlan_EETP_toEIS.[3_OKDP2]
+  ,vc.PurchasePlan_EETP_toEIS.[4_ContractSubject]
+  ,vc.PurchasePlan_EETP_toEIS.[5_MinRequirements]
+  ,vc.PurchasePlan_EETP_toEIS.[6_OKEIcode]
+  ,vc.PurchasePlan_EETP_toEIS.[7_OKEIname]
+  ,vc.PurchasePlan_EETP_toEIS.[8_Quantity]
+  ,vc.PurchasePlan_EETP_toEIS.[9_OKATOcode]
+  ,vc.PurchasePlan_EETP_toEIS.[10_OKATOname]
+  ,vc.PurchasePlan_EETP_toEIS.[11_PlannedSumByNotificationTax]
+  ,vc.PurchasePlan_EETP_toEIS.[12_PublicationPlannedDate]
+  ,vc.PurchasePlan_EETP_toEIS.[13_PlannedDateOfCompletion]
+  ,vc.PurchasePlan_EETP_toEIS.[14_PurchaseMethodCode]
+  ,vc.PurchasePlan_EETP_toEIS.[15_IsElectronicPurchase]
+  ,vc.PurchasePlan_EETP_toEIS.[16_PurchaseMethodId]
+  ,vc.PurchasePlan_EETP_toEIS.[17_CurrencyCode]
+  ,vc.PurchasePlan_EETP_toEIS.[18_ForSmallOrMiddle]
+  ,vc.PurchasePlan_EETP_toEIS.[19_PurchaseCategoryId]
+  ,vc.PurchasePlan_EETP_toEIS.[20_CurrencyRate]
+  ,vc.PurchasePlan_EETP_toEIS.[21_CurrencyRateDate]
+  ,vc.PurchasePlan_EETP_toEIS.[22_MaxRUBContractSumm]
+  ,vc.PurchasePlan_EETP_toEIS.[23_IsInnovation]
+  ,vc.PurchasePlan_EETP_toEIS.[24_ChangeExplanationCode]
+  ,vc.PurchasePlan_EETP_toEIS.[25_AdditionalInfo]
+  ,vc.PurchasePlan_EETP_toEIS.[26_PositionStatusCode]
+  ,vc.PurchasePlan_EETP_toEIS.[27_ExclusionExplanationCode]
+  ,vc.PurchasePlan_EETP_toEIS.[28_IsLTP]
+  ,vc.PurchasePlan_EETP_toEIS.[29_LTPinfo]
+  ,vc.PurchasePlan_EETP_toEIS.[30_LTPinfoForMSP]
+  ,vc.PurchasePlan_EETP_toEIS.[31_IsCommonAddress]
+FROM
+  vc.PurchasePlan_EETP_toEIS
