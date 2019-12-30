@@ -7,7 +7,8 @@ declare @approvalRouteId bigint = 148174
 
 -- revert request
 update dbo.PurchaseRequests
-	set [Status] = 20 -- Согласование
+	set [Status] = 177, -- Ожидание подписания итогового протокола
+	    Stage = 4 --Работа с ЭТП
 	WHERE Id = @requestId
 
 -- revert approval
