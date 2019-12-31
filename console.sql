@@ -67,12 +67,13 @@ SELECT AC.RequestId [PRid], '00000000-0000-0000-0000-000000000000' [RHid], LTP.P
 	FROM dbo.LongTermPurschasePayments LTP
 	LEFT JOIN dbo.AuctionCycles AC ON AC.Id = LTP.AuctionCycleId
 	LEFT JOIN dbo.PurchaseRequests PR ON PR.Id = AC.RequestId
+    where ac.IsActive = 1
 	UNION ALL
 	SELECT RH.RequestId [PRid], RH.Id [RHid], LTP.PaymentYear, LTP.PaymentSummWithTax,
 		RH.ForSmallOrMiddle
 	FROM dbo.LongTermPurchasePaymentHists LTP
 	LEFT JOIN dbo.RequestHistories RH ON RH.Id = LTP.RequestHistoryId
-), LTPinfo AS (--сведения о долгосрочных оплатах в строку с разделителями
+) --, LTPinfo AS (--сведения о долгосрочных оплатах в строку с разделителями
 --PROBLEM: LTP это свойство PR а не AC, я не правильно спроектировал
 SELECT t.PRid, t.RHid
 		, STUFF(( SELECT ';' + CAST(LTPwithRH.PaymentYear AS nvarchar(4)) + ':' + CAST(LTPwithRH.PaymentSummWithTax AS nvarchar(32))
@@ -91,7 +92,9 @@ SELECT t.PRid, t.RHid
 				  FOR XML PATH(''), TYPE)
 				  .value('.','NVARCHAR(MAX)'),1,1,'') AS LTPinfoForMSP
 	FROM LTPwithRH AS t
+    where t.PRid = 14259
 	GROUP BY t.PRid, t.RHid
+
 ), PRwithRH AS (
 --PROBLEM: AC должен быть только для торгов, сейчас AC это не полный цикл планирования + сведения о торгах
 SELECT RH.RequestId [PRid], RH.AddedTime, RH.[Name], RH.PlannedPurchaseMethodCode, RH.Id [RHid],
@@ -113,10 +116,11 @@ SELECT RH.RequestId [PRid], RH.AddedTime, RH.[Name], RH.PlannedPurchaseMethodCod
 		CASE WHEN PR.PurchaseCategory_Id IS NULL THEN 0 ELSE PR.PurchaseCategory_Id END [PurchaseCategory_Id], PR.IsInnovation,
 		PR.AdditionalInfo
 	FROM dbo.PurchaseRequests PR
-), RequestData AS (
+)--, RequestData AS (
 SELECT AC.Id [ACid], AC.IsActive [ACIsActive], AC.[Stage] [StageFromAC], AC.[Status] [StatusFromAC], PRRH.*
 	FROM PRwithRH PRRH
 	LEFT JOIN dbo.AuctionCycles AC ON PRRH.AuctionCycleId = AC.Id
+    where prrh.PRid = 14259
 ), ApprovedByCZO_PCi AS (
 SELECT PC.ModifiedTime [PCModifiedTime], PC.LoadedToOos, PC.[Status] [PCSatus], PCi.*
 	FROM dbo.ProtocolCzoes PC
@@ -171,17 +175,17 @@ SELECT DISTINCT PRid, ACid, StateModifiedTime FROM NoStateVersionConflict
 SELECT *, ROW_NUMBER() OVER(PARTITION BY ACid ORDER BY StateModifiedTime DESC) [DescStateModificationOrder] FROM NoConflictStatesWithModTime
 -- where NoConflictStatesWithModTime.PRid = 14259
 ), NoConflictStatesWithOrderSortTime AS (
-SELECT DISTINCT PRid, ACid, OrderSortTime FROM NoStateVersionConflict
-), NoConflictStatesWithVersionOrder AS (
+SELECT DISTINCT PRid, ACid, RHid, OrderSortTime FROM NoStateVersionConflict
+)--, NoConflictStatesWithVersionOrder AS (
 SELECT *, ROW_NUMBER() OVER(PARTITION BY ACid ORDER BY OrderSortTime DESC) [DescVersionOrder] FROM NoConflictStatesWithOrderSortTime
--- where NoConflictStatesWithOrderSortTime.PRid = 14259
+where NoConflictStatesWithOrderSortTime.PRid = 14259
 )--, NoPRRHversionConflict AS (--убираем конфликт версий PR и RH сопоставив очередность их добавления очередности возникновения правок
 SELECT NSVC.*, MO.DescStateModificationOrder, SO.DescVersionOrder
 	FROM NoStateVersionConflict NSVC
 	LEFT JOIN NoConflictStatesWithModOrder MO ON (MO.ACid = NSVC.ACid) AND (MO.StateModifiedTime = NSVC.StateModifiedTime)
 	LEFT JOIN NoConflictStatesWithVersionOrder SO ON (SO.ACid = NSVC.ACid) AND (SO.OrderSortTime = NSVC.OrderSortTime)
-	WHERE (MO.DescStateModificationOrder = SO.DescVersionOrder)
-	and nsvc.PRid = 14259
+	WHERE --(MO.DescStateModificationOrder = SO.DescVersionOrder)
+	 nsvc.PRid = 14259
 ), AddPositionStatusCode AS (
 SELECT
 		*,

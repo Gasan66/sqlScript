@@ -1,10 +1,10 @@
 use ASUZD
 begin tran createAuditItem
 
-declare @requestId bigint = 19462
-declare @date nvarchar(50) = '2019-12-27 11:28:14.143'
+declare @requestId bigint = 21841
+declare @date nvarchar(50) = current_timestamp
 declare @userId nvarchar(50) = '865341a5-ee62-4814-8b29-8ca8d7bc5884'
-declare @message nvarchar(max) = N'Изменил статус и стадию на "Ожидание подписания итогового протокола" и "Работа с ЭТП" соответственно'
+declare @message nvarchar(max) = N'Сменил способ закупки на КэфМСП'
 
 insert into AuditItems
 values (@date,

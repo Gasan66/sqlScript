@@ -1,29 +1,39 @@
 USE ASUZD
 
-declare  @prID as int = 20623
+declare  @prID as int = 21615
 
-begin tran updReqStatus
+select      pr.PlannedPurchaseMethodCode
 
-    update PurchaseRequests
-    set
-           Name = N'Оказание услуг по предоставлению кредитных ресурсов в форме возобновляемой кредитной линии для АО «ЕЭСК» с лимитом задолженности 500 000 000 рублей сроком на 36 месяцев',
-           PlannedSumTax = 145500000,
-           PlannedSumNotax = 145500000,
-           PlannedSumByNotificationTax = 145500000,
-           PlannedSumByNotificationNotax = 145500000
-    where id = @prID
-
-    select  pr.Name,
-            pr.PlannedSumTax,
-            pr.PlannedSumNotax,
-            pr.PlannedSumByNotificationTax,
-            pr.PlannedSumByNotificationNotax
     from PurchaseRequests pr
     left join AuctionCycles ac on pr.Id = ac.RequestId
     left join TechnicalProjectRequests tpr on tpr.AuctionCycleId = ac.Id
     left join TechnicalProjects tp on tpr.TechnicalProjectId = tp.Id
     left join Status s on s.Id = pr.Status
+    left join LongTermPurschasePayments ltpp on ac.Id = ltpp.AuctionCycleId
     where pr.Id = @prID
 
--- rollback tran
-commit tran
+begin tran updReqStatus
+
+    update PurchaseRequests
+    set
+           PlannedPurchaseMethodCode = N'КэфМСП'
+    where id in (21615,
+                 21646,
+                 21810,
+                 21841)
+
+    select      pr.PlannedPurchaseMethodCode
+
+    from PurchaseRequests pr
+    left join AuctionCycles ac on pr.Id = ac.RequestId
+    left join TechnicalProjectRequests tpr on tpr.AuctionCycleId = ac.Id
+    left join TechnicalProjects tp on tpr.TechnicalProjectId = tp.Id
+    left join Status s on s.Id = pr.Status
+    left join LongTermPurschasePayments ltpp on ac.Id = ltpp.AuctionCycleId
+    where pr.Id in (21615,
+                 21646,
+                 21810,
+                 21841)
+
+rollback tran
+-- commit tran
