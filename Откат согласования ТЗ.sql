@@ -2,9 +2,9 @@ use ASUZD
 
 begin tran revertTZApproval
 
-declare @TzId bigint = 13366
-declare @TzApprovalId bigint = 17277
-declare @approvalRouteId bigint = 42326
+declare @TzId bigint = 13943
+declare @TzApprovalId bigint = 18025
+declare @approvalRouteId bigint = 44100
 
 -- revert request
 update dbo.TechnicalProjects
@@ -34,6 +34,6 @@ select id, IsActive, TimeOfDecided, Decision, Message from dbo.TechnicalProjectA
 -- temp
 --select * from dbo.Status
 
-rollback tran
+-- rollback tran
 
--- commit tran
+commit tran
