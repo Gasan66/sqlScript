@@ -26,6 +26,5 @@ where PurchaseRequestId = @requestId and ItemId in (select id
                                                                                     where Time = @date and UserId = @userId)
 
 
--- rollback tran
-
-commit tran
+rollback tran
+-- commit tran
