@@ -1,32 +1,32 @@
-select getdate()
-from LongTermPurschasePayments
-left join AuctionCycles AC on LongTermPurschasePayments.AuctionCycleId = AC.Id
-left join PurchaseRequests PR on AC.RequestId = PR.Id
-where pr.id = 21073
+select top 10 *
+from AuctionStages
+join AuctionCycles AC on AuctionStages.AuctionCycleId = AC.Id
+join PurchaseRequests PR on AC.RequestId = PR.Id
+where pr.Id = 20577
 
-begin tran updLongTermPurschasePayments
+begin tran updAucSt
+update AuctionStages
+set IsNeedExpertise = 1
+where Id = '118F389C-9D49-4734-BB0A-8C4FFCDF2C4F'
+ select top 10 *
+from AuctionStages
+join AuctionCycles AC on AuctionStages.AuctionCycleId = AC.Id
+join PurchaseRequests PR on AC.RequestId = PR.Id
+where pr.Id = 20577
+rollback tran
 
-    update LongTermPurschasePayments
-    set PaymentSummWithTax = 57748630
-    where id = 19559
 
-    update LongTermPurschasePayments
-    set PaymentSummWithTax = 145500000
-    where id = 19560
+select top 10 ac.*
+from AuctionCycles ac
+join PurchaseRequests PR on ac.RequestId = PR.Id
+where pr.Id = 22672
 
-    update LongTermPurschasePayments
-    set PaymentSummWithTax = 145500000
-    where id = 19561
 
-    update LongTermPurschasePayments
-    set PaymentSummWithTax = 87751370
-    where id = 19562
+begin tran updAucCyc
+    update AuctionCycles set FinalSumNoTax = 4474219.25, FinalSumTax = 5369063.10
+    where id = 28828  ;
 
-    select *
-    from LongTermPurschasePayments
-    left join AuctionCycles AC on LongTermPurschasePayments.AuctionCycleId = AC.Id
-    left join PurchaseRequests PR on AC.RequestId = PR.Id
-    where pr.id = 21073
-
--- rollback tran
-commit tran
+    select FinalSumTax, FinalSumNoTax
+    from AuctionCycles
+    where Id = 28828
+rollback tran

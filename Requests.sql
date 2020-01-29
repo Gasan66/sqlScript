@@ -1,8 +1,8 @@
 USE ASUZD
 
-declare  @prID as int = 21615
+declare  @prID as int = 19916
 
-select      pr.PlannedPurchaseMethodCode
+select      pr.*
 
     from PurchaseRequests pr
     left join AuctionCycles ac on pr.Id = ac.RequestId
