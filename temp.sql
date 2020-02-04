@@ -1,7 +1,3 @@
-select NumberLot
-from ProtocolCzoItems
-where Protocol_Id = 395
-
-select Stage, Status
+select *
 from PurchaseRequests
-where id = 18519
+where Stage = 6

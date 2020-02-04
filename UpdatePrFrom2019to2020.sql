@@ -113,8 +113,8 @@ begin tran updProtocolCZOto2020
     from ProtocolCzoes
     where id in (395, 391)
 
--- rollback tran
-commit tran
+rollback tran
+-- commit tran
 
 begin tran updStageStatus
 
@@ -131,4 +131,5 @@ begin tran updStageStatus
                  where Protocol_Id = 395)
     group by Status, Stage
 
-rollback tran
+-- rollback tran
+commit tran
