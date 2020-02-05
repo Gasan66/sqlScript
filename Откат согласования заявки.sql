@@ -1,14 +1,14 @@
 use ASUZD
 begin tran revertRequestApproval
 
-declare @requestId bigint = 20290
-declare @requestApprovalId bigint = 32886
-declare @approvalRouteId bigint = 148174
+declare @requestId bigint = 22915
+declare @requestApprovalId bigint = 33622
+declare @approvalRouteId bigint = 151612
 
 -- revert request
 update dbo.PurchaseRequests
-	set [Status] = 177, -- Ожидание подписания итогового протокола
-	    Stage = 4 --Работа с ЭТП
+	set [Status] = 40, -- Согласование ЦЗО
+	    Stage = 0 --Включение в ПЗ
 	WHERE Id = @requestId
 
 -- revert approval
@@ -36,5 +36,4 @@ select id, IsActive, TimeOfDecided, Decision, Message from dbo.RequestApprovalRo
 --select * from dbo.Status
 
 rollback tran
-
 -- commit tran

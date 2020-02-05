@@ -1,3 +1,5 @@
+use ASUZD
+
 select distinct (pr.PlannedPurchaseYear)
 -- into PurchaseRequest_2019_to_2020
 from ProtocolCzoItems pci
@@ -92,10 +94,6 @@ rollback tran
 -- commit tran
 
 
-
-
-
-
 select *
 -- into ProtocolCzo_2019_to_2020
 from ProtocolCzoes
@@ -114,6 +112,24 @@ begin tran updProtocolCZOto2020
     select *
     from ProtocolCzoes
     where id in (395, 391)
+
+rollback tran
+-- commit tran
+
+begin tran updStageStatus
+
+    update PurchaseRequests
+    set Status = 70, Stage = 3
+    where id in (select NumberLot
+                 from ProtocolCzoItems
+                 where Protocol_Id = 395)
+
+    select Status, Stage, count(*)
+    from PurchaseRequests
+    where id in (select NumberLot
+                 from ProtocolCzoItems
+                 where Protocol_Id = 395)
+    group by Status, Stage
 
 -- rollback tran
 commit tran

@@ -1,10 +1,10 @@
 use ASUZD
 begin tran createAuditItem
 
-    declare @TZ bigint = 13551
+    declare @TZ bigint = 13944
     declare @date nvarchar(50) = current_timestamp
     declare @userId nvarchar(50) = '865341a5-ee62-4814-8b29-8ca8d7bc5884'
-    declare @message nvarchar(max) = N'Изменил Status = 7'
+    declare @message nvarchar(max) = N'Установил параметр Единичные расценки = "Да"'
 
     insert into AuditItems
     values (@date,
@@ -26,5 +26,5 @@ begin tran createAuditItem
                                                         where Time = @date and UserId = @userId)
 
 
--- rollback tran
-commit tran
+rollback tran
+-- commit tran
