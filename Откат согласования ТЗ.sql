@@ -2,9 +2,9 @@ use ASUZD
 
 begin tran revertTZApproval
 
-declare @TzId bigint = 13943
-declare @TzApprovalId bigint = 18025
-declare @approvalRouteId bigint = 44100
+declare @TzId bigint = 14000
+declare @TzApprovalId bigint = 18203
+declare @approvalRouteId bigint = 44499
 
 -- revert request
 update dbo.TechnicalProjects

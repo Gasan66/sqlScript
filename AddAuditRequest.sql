@@ -1,7 +1,7 @@
 use ASUZD
 begin tran createAuditItem
 
-declare @requestId bigint = 22915
+declare @requestId bigint = 23256
 declare @date nvarchar(50) = current_timestamp
 declare @userId nvarchar(50) = '865341a5-ee62-4814-8b29-8ca8d7bc5884'
 declare @message nvarchar(max) = N'Откатил согласование Князевой Оксаны Александровны'
