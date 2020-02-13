@@ -26,5 +26,6 @@ where usr_asuzd.Email not like 'import%'
   and usr_asuzd.Email not like '%suzd%'
   and usr_asuzd.Email not like '%mail.ru%'
   and usr_asuzd.Email not like '%@che.mrsk-ural.ru%'
-  and (usr_asuzd.Email != usr_ad.mail or usr_ad.mail is NULL)
+  and usr_asuzd.Email != usr_ad.mail
+  and usr_ad.mail is not NULL
 order by usr_ad.mail
