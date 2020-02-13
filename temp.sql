@@ -1,5 +1,2 @@
-select count(*)
-from ChangeLogs
-where ModifiedBy is not NULL
-and getdate() - DateChanged < 30
-
+insert into _test_usr
+select top 10 * from AspNetUsers
