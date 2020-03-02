@@ -1,13 +1,23 @@
-select *
-from TechnicalProjectOrders
--- join Orders O on TechnicalProjectOrders.OrderId = O.Id
-where TechnicalProjectId = 14220
+use ASUZD
+begin tran changeLoin
+    update AspNetUsers
+    set UserName = Email
+    from AspNetUsers usr
+    join _log_change_logins log on usr.Email = log.new_login
+    where usr.Email != 'Borisova-KI@rosseti-ural.ru'
 
-select *
-from TechnicalProjectComissionMembers
-join ComissionMembers CM on TechnicalProjectComissionMembers.ComissionMemberId = CM.Id
-join Orders O on CM.Order_Id = O.Id
-join AspNetUsers ANU on CM.ApplicationUserId = ANU.Id
-where TechnicalProjectId = 14220
+    select email, UserName
+    from AspNetUsers usr
+    join _log_change_logins log on usr.Email = log.new_login
+-- rollback tran
+commit tran
+select AspNetUsers.Id, anr.*
+from AspNetUsers
+join AspNetUserRoles ANUR on AspNetUsers.Id = ANUR.UserId
+join AspNetRoles ANR on ANUR.RoleId = ANR.Id
+where Email = 'Borisova-KI@rosseti-ural.ru'
 
+select log.new_login, count(*)
+from _log_change_logins log
+group by log.new_login
 
