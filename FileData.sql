@@ -32,5 +32,43 @@ begin tran updFile
     join FileDatas FD on pf.Data_Id = FD.Id
     where pf.ProtocolId = 462
 
+rollback tran
+-- commit tran
+
+select *
+from FileDatas
+join RequestFiles RF on FileDatas.Id = RF.Data_Id
+where RF.RequestId = 22286
+
+select *
+from FileDatas
+where Id ='1A45BBCD-506F-EA11-9E59-005056BD0BDE'
+
+
+
+begin tran updFile22367
+update FileDatas
+set Name = N'old_22367_Анализ несост. процедуры_зарядно-подзарядные устройства_13885.pdf'
+where id = 'B2F2740D-4E42-EA11-9E59-005056BD0BDE'
+
+    select *
+    from FileDatas
+    where Id ='B2F2740D-4E42-EA11-9E59-005056BD0BDE'
+-- rollback tran
+commit tran
+
+select *
+from RequestFiles
+join FileDatas FD on RequestFiles.Data_Id = FD.Id
+where RequestId = 22367
+
+begin tran insertNewFile22367
+    insert into RequestFiles
+    values (22367, 15, 2, '1A45BBCD-506F-EA11-9E59-005056BD0BDE')
+
+    select *
+    from RequestFiles
+    join FileDatas FD on RequestFiles.Data_Id = FD.Id
+    where RequestId = 22367
 -- rollback tran
 commit tran
