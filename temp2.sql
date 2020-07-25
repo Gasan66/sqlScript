@@ -1,21 +1,19 @@
 use ASUZD
-select CustomerSubdivision
-from PurchaseRequests
-where id = 19523
-
-
-SELECT *
-FROM dbo.AspNetUsers AS USERS
-LEFT JOIN dbo.AspNetUserRoles AS USERROLE ON USERROLE.UserId = USERS.Id
-LEFT JOIN dbo.AspNetRoles AS ROLES ON ROLES.Id = USERROLE.RoleId
-WHERE IsGroup = 1
-AND ROLES.[Name] NOT LIKE N'%Согласование%' and USERS.Id = '6bca4d95-d5f9-4701-8906-a3a2234647de'
-
 
 select *
-from AspNetUsers usr
-left join AspNetUserRoles ANUR on usr.Id = ANUR.UserId
+from PurchaseRequests pr
+where pr.Id = 23310
 
-select groups.Name, groups.FullName, roles.Name
-from AspNetRoles groups
-left join AspNetRoles roles on groups.RoleOfGroupId = roles.Id
+select * from AuctionCycles
+where RequestId = 23310
+
+select * from RequestHistories
+where RequestId = 23310
+
+select ac.Id, ac.RequestId, tp.Id, pr.PlannedPurchaseMethodCode, rh.PlannedPurchaseMethodCode
+from TechnicalProjects tp
+join TechnicalProjectRequests tpr on tp.Id = tpr.TechnicalProjectId
+join AuctionCycles AC on tpr.AuctionCycleId = AC.Id
+join PurchaseRequests PR on AC.RequestId = PR.Id
+left join RequestHistories rh on rh.AuctionCycleId = ac.Id
+where ac.RequestId = 23310

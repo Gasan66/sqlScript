@@ -1,17 +1,17 @@
 use ASUZD
 select id, Status
 from TechnicalProjects
-where id = 13551
+where id = 14861
 
 begin tran UpdateTZ
 
     update TechnicalProjects
-    set Status = 7
-    where id = 13551
+    set Status = 8
+    where id = 14861
 
     select id, Status
     from TechnicalProjects
-    where id = 13551
+    where id = 14861
 
 -- rollback tran
 commit tran

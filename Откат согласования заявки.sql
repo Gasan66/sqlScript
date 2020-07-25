@@ -1,9 +1,9 @@
 use ASUZD
 begin tran revertRequestApproval
 
-declare @requestId bigint = 23256
-declare @requestApprovalId bigint = 34307
-declare @approvalRouteId bigint = 155024
+declare @requestId bigint = 23869
+declare @requestApprovalId bigint = 35554
+declare @approvalRouteId bigint = 160745
 
 -- revert request
 update dbo.PurchaseRequests

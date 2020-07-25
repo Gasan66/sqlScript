@@ -6,11 +6,11 @@ select pr.Id,
 from ASUZD.dbo.PurchaseRequests pr
 left join ASUZD.dbo.Status on ASUZD.dbo.Status.id = pr.Status
 left join ASUZD.dbo.Stages on ASUZD.dbo.Stages.id = pr.Stage
-where pr.id = 23090 or pr.Id = 21470
+where pr.id = 23583 or pr.Id = 20147
 
 update ASUZD.dbo.PurchaseRequests
 set Status = 177, Stage = 4 --186 9
-where ASUZD.dbo.PurchaseRequests.Id = 23090
+where ASUZD.dbo.PurchaseRequests.Id = 23583
 
 select pr.Id,
        Status.Description as 'Status',
@@ -18,7 +18,7 @@ select pr.Id,
 from ASUZD.dbo.PurchaseRequests pr
 left join ASUZD.dbo.Status on ASUZD.dbo.Status.id = pr.Status
 left join ASUZD.dbo.Stages on ASUZD.dbo.Stages.id = pr.Stage
-where pr.id = 23090 or pr.Id = 21470
+where pr.id = 23583 or pr.Id = 20147
 
-rollback tran
--- commit tran
+-- rollback tran
+commit tran

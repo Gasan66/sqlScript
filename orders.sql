@@ -25,7 +25,7 @@ from TechnicalProjectComissionMembers
 join ComissionMembers CM on TechnicalProjectComissionMembers.ComissionMemberId = CM.Id
 join Orders O on CM.Order_Id = O.Id
 join AspNetUsers ANU on CM.ApplicationUserId = ANU.Id
-where TechnicalProjectId = 14220
+where TechnicalProjectId = 14944
 
 
 begin tran delOrderFromTZ
