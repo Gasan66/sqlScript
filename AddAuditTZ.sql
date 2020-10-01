@@ -1,10 +1,10 @@
 use ASUZD
 begin tran createAuditItem
 
-    declare @TZ bigint = 15006
+    declare @TZ bigint = 14171
     declare @date nvarchar(50) = current_timestamp
     declare @userId nvarchar(50) = '865341a5-ee62-4814-8b29-8ca8d7bc5884'
-    declare @message nvarchar(max) = N'Изменил is SinglePrice = 1 по письму от Таратухина Анастасия Александровна <Taratuhina-AA@rosseti-ural.ru>'
+    declare @message nvarchar(max) = N'Установил IsSinglePrice = 1'
 
     insert into AuditItems
     values (@date,
@@ -26,5 +26,5 @@ begin tran createAuditItem
                                                         where Time = @date and UserId = @userId)
 
 
--- rollback tran
-commit tran
+rollback tran
+-- commit tran
