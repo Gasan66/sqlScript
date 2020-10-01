@@ -1,25 +1,35 @@
 use ASUZD
-select * from (
-select case when ac.Status = 0 then prSt.Description else acSt.Description end as 'Description',
-           case when ac.Stage = 0 then pr.Stage else ac.Stage end as 'Stage',
-           anu.LastName + ' ' + anu.FirstName + ' ' + anu.MiddleName as PurchaserFullName,
-           tp.Id as TZid,
-           pr.id as RequestId,
-           pr.PurchasePlanYear as PurchasePlanYear,
-           ano.Description as OrgName,
-	       pr.Name as Name,
-       	   tp.Name as TZName,
-       	   tp.ExpEnvelopeOpeningTime as ExpEnvelopeOpeningTime,
-           pr.PlannedPurchaseMethodCode
-    from TechnicalProjects tp
-    join TechnicalProjectRequests TPR on tp.Id = TPR.TechnicalProjectId
-    join AuctionCycles AC on TPR.AuctionCycleId = AC.Id
-    join PurchaseRequests PR on AC.RequestId = PR.Id
-    join Status prSt on pr.Status = prSt.Id
-    join Status acSt on ac.Status = acSt.Id
-    join AspNetUsers ANU on TP.ExecutorId = ANU.Id
-    join AspNetOrganizations ANO on ANU.OrganizationId = ANO.Id
+select pr.id, ac.id, aus.*
+from AuctionStages aus
+join AuctionCycles AC on AC.Id = aus.AuctionCycleId
+join PurchaseRequests pr on AC.RequestId = pr.Id
+join TechnicalProjectRequests TPR on AC.Id = TPR.AuctionCycleId
+where tpr.TechnicalProjectId = 15036
 
-where anu.LastName = N'Онуфрийчук'
-and pr.PurchasePlanYear = 2020) t
-where t.PlannedPurchaseMethodCode = N'ЗПэФ'
+with manyRebidding as
+         (
+             select tpr.TechnicalProjectId,
+                    tp.Name,
+                    ac.Id    as aucId,
+                    aus.IsNeedRebidding,
+                    count(*) as cnt
+             from AuctionStages aus
+                      join AuctionCycles AC on AC.Id = aus.AuctionCycleId
+                      join TechnicalProjectRequests TPR on AC.Id = TPR.AuctionCycleId
+                      join TechnicalProjects tp on TPR.TechnicalProjectId = tp.Id
+             where
+                 aus.DateStartRebidding between '2020-08-01' and '2020-08-30'
+                or aus.DateStopRebidding between '2020-08-01' and '2020-08-30'
+             group by tpr.TechnicalProjectId,
+                      ac.Id,
+                      aus.IsNeedRebidding,
+                      tp.Name
+             having count(aus.IsNeedRebidding) > 1
+         )
+select mr.TechnicalProjectId,
+       mr.Name,
+       aus.DateStartRebidding,
+       aus.DateStopRebidding
+from AuctionStages aus
+join manyRebidding mr on aus.AuctionCycleId = mr.aucId
+where aus.IsNeedRebidding = 1
