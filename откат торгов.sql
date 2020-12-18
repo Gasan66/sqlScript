@@ -2,7 +2,7 @@
 -- после выполнения желательно сохранить все что было залогировано
 use ASUZD
 
--- begin tran
+begin tran
 	DECLARE @requestId bigint = 26796
     DECLARE @tzId bigint = 16325
 	DECLARE @acId bigint = 33832
